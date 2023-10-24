@@ -22,7 +22,8 @@ public class HotelReservationApp {
 
 
     public void cancelReservationProcess() {
-        String reservationId = viewManagement.showCancelReservation();
+        viewManagement.showCancelReservation();
+        String reservationId = viewManagement.handleInput();
         if (reservationId.equals("0")) {
             return; //메인메뉴? 특정 메뉴로 돌아가는 메소드
         }
@@ -33,25 +34,6 @@ public class HotelReservationApp {
             viewManagement.showCancelReservationSuccess(reservation);
         } catch (ReservationNotFoundException exception) {
             viewManagement.showCancelReservationFailed(exception.getMessage());
-        }
-    }
-    static class Test {
-        public static void main(String[] args) {
-            HotelReservationApp app = new HotelReservationApp();
-            Reservation reservation = new Reservation();
-
-            UUID uuid = UUID.randomUUID();
-            System.out.println(uuid);
-
-            reservation.setUuid(uuid);
-            reservation.setReservationDate(LocalDateTime.now());
-            reservation.setRoom(new Room(2.0, 10000.0));
-            reservation.setCustomerName("test");
-            reservation.setCustomerPhoneNumber("testNumber");
-
-            app.hotel.setReservations(new ArrayList<>(List.of(reservation)));
-
-            app.cancelReservationProcess();
         }
     }
 }
