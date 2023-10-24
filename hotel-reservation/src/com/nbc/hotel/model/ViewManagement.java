@@ -1,30 +1,62 @@
 package com.nbc.hotel.model;
 
+import com.nbc.hotel.exception.ReservationNotFoundException;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class ViewManagement {
-    private static final Scanner sc = new Scanner(System.in);
-    public static UUID inputUUID() {
 
+
+    public static void showFindReservationMenu() {
+        System.out.println("객실 예약 조회 화면입니다.");
+        System.out.println("1. 모든 예약 조회(관리자 기능");
+        System.out.println("2. 내 예약 목록 조회");
+        System.out.println("3. 예약 번호로 조회");
+        System.out.println("4. 돌아가기");
     }
 
-    public String handleInput() {
-        return sc.nextLine();
+    public static void showFindAllReservations(List<Reservation> reservations) {
+        System.out.println("모든 예약을 조회합니다.");
+        showReservations(reservations);
     }
-    public void showCancelReservation() {
+
+    public static void showFindMyReservations(List<Reservation> reservations) {
+        System.out.println("내 예약 목록을 조회합니다.");
+        showReservations(reservations);
+    }
+
+    public static void showFindReservation(Reservation reservation) {
+        System.out.println("예약 번호로 조회합니다.");
+        showReservations(List.of(reservation));
+    }
+
+    public static void showReservations(List<Reservation> reservations) {
+        System.out.println("[예약 정보]");
+        reservations.forEach(reservation -> {
+            System.out.println(reservation.getReservationInfo());
+        });
+    }
+    public static void showFindReservationFailed() {
+        System.out.println("예약 번호로 조회할 수 없습니다.");
+    }
+
+
+    public static void showCancelReservation() {
         System.out.println("객실 예약 취소");
         System.out.println("취소하실 객실의 예약 번호를 입력해주세요.");
         System.out.print("입력 > ");
     }
 
-    public void showCancelReservationSuccess(Reservation reservation) {
+    public static void showCancelReservationSuccess(Reservation reservation) {
         System.out.println("객실 예약이 취소 되었습니다.");
         System.out.println("[예약 정보]");
         System.out.printf(reservation.getReservationInfo());
     }
 
-    public void showCancelReservationFailed(String reason) {
+    public static void showCancelReservationFailed(String reason) {
         System.out.println("객실 예약 취소가 실패하였습니다.");
         System.out.printf("사유 %s %n", reason);
     }
