@@ -1,16 +1,10 @@
 package com.nbc.hotel.app;
 
-import com.nbc.hotel.Util;
+import com.nbc.hotel.util.Util;
 import com.nbc.hotel.exception.ReservationNotFoundException;
 import com.nbc.hotel.model.Hotel;
 import com.nbc.hotel.model.Reservation;
-import com.nbc.hotel.model.Room;
 import com.nbc.hotel.model.ViewManagement;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class HotelReservationApp {
     ViewManagement viewManagement = new ViewManagement();
