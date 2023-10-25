@@ -11,11 +11,13 @@ public class ViewManagement {
 
 
     public static void showFindReservationMenu() {
+        System.out.println();
         System.out.println("객실 예약 조회 화면입니다.");
-        System.out.println("1. 모든 예약 조회(관리자 기능");
+        System.out.println("1. 모든 예약 조회(관리자 기능)");
         System.out.println("2. 내 예약 목록 조회");
         System.out.println("3. 예약 번호로 조회");
         System.out.println("4. 돌아가기");
+        System.out.print("입력: ");
     }
 
     public static void showFindAllReservations(List<Reservation> reservations) {
@@ -28,9 +30,9 @@ public class ViewManagement {
         showReservations(reservations);
     }
 
-    public static void showFindReservation(Reservation reservation) {
+    public static void showFindReservation() {
         System.out.println("예약 번호로 조회합니다.");
-        showReservations(List.of(reservation));
+        System.out.println("예약 번호를 입력해주세요.");
     }
 
     public static void showReservations(List<Reservation> reservations) {
@@ -38,6 +40,10 @@ public class ViewManagement {
         reservations.forEach(reservation -> {
             System.out.println(reservation.getReservationInfo());
         });
+    }
+
+    public static void showFindReservationClose() {
+        System.out.println("예약 조회를 종료합니다.");
     }
     public static void showFindReservationFailed() {
         System.out.println("예약 번호로 조회할 수 없습니다.");

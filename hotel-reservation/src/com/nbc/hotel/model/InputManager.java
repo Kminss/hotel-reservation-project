@@ -38,7 +38,7 @@ public class InputManager {
     }
 
     private static boolean isValidMenuNumber(int number, int menuSize) {
-        if (number > 0 && number < menuSize) {
+        if (number > 0 && number <= menuSize) {
             return true;
         }
         return false;
