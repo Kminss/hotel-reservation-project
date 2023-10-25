@@ -10,4 +10,5 @@ public enum Role {
     }
 
     private String role;
+
 }
