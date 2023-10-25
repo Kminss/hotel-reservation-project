@@ -1,11 +1,6 @@
 package com.nbc.hotel.model;
 
-import com.nbc.hotel.exception.ReservationNotFoundException;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
 
 public class ViewManagement {
 
@@ -37,9 +32,7 @@ public class ViewManagement {
 
     public static void showReservations(List<Reservation> reservations) {
         System.out.println("[예약 정보]");
-        reservations.forEach(reservation -> {
-            System.out.println(reservation.getReservationInfo());
-        });
+        reservations.forEach(reservation -> System.out.println(reservation.getReservationInfo()));
     }
 
     public static void showFindReservationClose() {
@@ -51,19 +44,24 @@ public class ViewManagement {
 
 
     public static void showCancelReservation() {
-        System.out.println("객실 예약 취소");
+        System.out.println("========예약 취소하기========");
         System.out.println("취소하실 객실의 예약 번호를 입력해주세요.");
         System.out.print("입력 > ");
     }
 
     public static void showCancelReservationSuccess(Reservation reservation) {
+        System.out.println("===========success===========");
         System.out.println("객실 예약이 취소 되었습니다.");
-        System.out.println("[예약 정보]");
+        System.out.println("===========예약정보===========");
+        System.out.println("==============================");
         System.out.printf(reservation.getReservationInfo());
     }
 
     public static void showCancelReservationFailed(String reason) {
+        System.out.println("===========fail===========");
         System.out.println("객실 예약 취소가 실패하였습니다.");
-        System.out.printf("사유 %s %n", reason);
+        System.out.println("===========사유===========");
+        System.out.println(reason);
+        System.out.println("==========================");
     }
 }
