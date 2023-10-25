@@ -81,4 +81,17 @@ public class HotelReservationApp {
             ViewManagement.showCancelReservationFailed(exception.getMessage());
         }
     }
+
+    // 실행 화면
+    public static void main(String[] args) {
+        ViewManagement viewManagement = new ViewManagement();
+        Hotel hotel = new Hotel();
+
+        // 객체들간의 DI
+        viewManagement.setHotel(hotel);
+        hotel.setViewManagement(viewManagement);
+
+        viewManagement.test();
+
+    }
 }
