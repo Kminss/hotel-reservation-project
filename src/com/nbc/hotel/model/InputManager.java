@@ -28,23 +28,43 @@ public class InputManager {
         while (result == -1) {
             try {
                 result = Integer.parseInt(sc.nextLine());
-                if (!isValidMenuNumber(result, menuSize))
+                validateMenuNumber(result, menuSize);
+            } catch (Exception exception) {
+                System.out.println(exception.getMessage());
+                result = -1;
+            }
+        }
+        return result - 1; // 인덱스라서 -1
+    }
+
+    private static void validateMenuNumber(int number, int menuSize) throws Exception {
+        if (!(number > 0 && number <= menuSize)) {
+            throw new Exception("잘못된 메뉴 입력입니다. 다시 입력해주세요.");
+        }
+    }
+
+    public static String handleInput() {
+        return sc.nextLine();
+    }
+
+    public static Long inputMoney() {
+        long result = -1;
+        while (result == -1) {
+            try {
+                result = Long.parseLong(sc.nextLine());
+                if (!isValidMoney(result))
                     result = -1;
-            } catch (NumberFormatException numberFormatException) {
+            } catch (Exception exception) {
                 System.out.println("잘못된 입력입니다.");
             }
         }
         return result;
     }
 
-    private static boolean isValidMenuNumber(int number, int menuSize) {
-        if (number > 0 && number <= menuSize) {
+    private static boolean isValidMoney(long money) {
+        if (money > 0) {
             return true;
         }
         return false;
-    }
-
-    public static String handleInput() {
-        return sc.nextLine();
     }
 }

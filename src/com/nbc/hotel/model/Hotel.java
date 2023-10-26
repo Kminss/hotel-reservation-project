@@ -14,13 +14,10 @@ public class Hotel {
 	private List<Room> rooms = new ArrayList<>();				// 현재 방목록
 	private List<Reservation> reservations = new ArrayList<>();	// 현재 예약목록
 	private Double money;										// 총자산
-	
-	private int roomNumber = 1;
-	
+
 	Reservation reservation = new Reservation();
+
 	Customer customer = new Customer();
-	
-	private ViewManagement viewManagement;
 	
 	private final String BLACKLISTPHONENUMBER_PATTERN = "010-2222-\\d+";
     private Pattern blacklistPattern = Pattern.compile(BLACKLISTPHONENUMBER_PATTERN);
@@ -75,33 +72,23 @@ public class Hotel {
 				.filter(reservation -> uuids.contains(reservation.getUUID()))
 				.toList();
 	}
-	public Hotel(ViewManagement viewManagement) {
-		this.viewManagement = viewManagement;
-	}
-	
-	public void setViewManagement(ViewManagement viewManagement) {
-		this.viewManagement = viewManagement;
-	}
 	
 	
 	public List<Room> getRooms(){
 		return this.rooms;
 	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
 	
 	public List<Reservation> getReservations() {
 		return reservations;
 	}
-
-	public void setReservations(List<Reservation> reservations) {
-		this.reservations = reservations;
-	}
 	
 	// 예약 처리 프로세스
-	
-	public void checkCustomerName(String customerName, int selectRoomNumber) {
+	public void checkCustomerName(String customerName, int selectRoomNumber) throws Exception {
 		try {
-	        // System.out.println("name: " + customerName);
-			// test
 	        if (!customerName.matches("^[a-zA-Z가-힣\\s]*$")) {
 	            throw new IllegalArgumentException("예약자 이름은 특수 문자를 포함해서는 안 됩니다.");
 	        }
@@ -112,7 +99,7 @@ public class Hotel {
 	        // 예약 번호 설정
 	        customer.setName(customerName);
 	        // 예약자 이름 설정
-	        reservation.setRoom(getRooms().get(selectRoomNumber - 1));
+	        reservation.setRoom(getRooms().get(selectRoomNumber));
 	        // 예약 리스트 room 설정
 	        reservation.setCustomerName(customerName);
 	        // 예약자 이름 설정
@@ -120,8 +107,7 @@ public class Hotel {
 	        System.out.println("예외 발생: " + e.getMessage());
 	        System.out.println("예약 페이지로 다시 돌아갑니다.");
             System.out.println("============================");
-            viewManagement.test();
-            return;
+            throw new Exception();
 	    }
 	}
 	
