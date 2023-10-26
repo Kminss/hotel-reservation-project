@@ -15,7 +15,7 @@ public class Hotel {
 	private List<Reservation> reservations = new ArrayList<>();	// 현재 예약목록
 	private Double money;										// 총자산
 
-	Reservation reservation = new Reservation();
+//	Reservation reservation = new Reservation();
 
 	Customer customer = new Customer();
 	
@@ -92,8 +92,9 @@ public class Hotel {
 	        if (!customerName.matches("^[a-zA-Z가-힣\\s]*$")) {
 	            throw new IllegalArgumentException("예약자 이름은 특수 문자를 포함해서는 안 됩니다.");
 	        }
-	        
-	        UUID uuid = UUID.randomUUID();
+
+
+			UUID uuid = UUID.randomUUID();
 	        reservation.setUUID(uuid);
 	        customer.addReservationId(uuid);
 	        // 예약 번호 설정

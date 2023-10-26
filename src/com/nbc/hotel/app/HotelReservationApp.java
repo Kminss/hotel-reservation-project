@@ -1,19 +1,19 @@
 package com.nbc.hotel.app;
 
-import com.nbc.hotel.exception.RoomNumberInvalidException;
 import com.nbc.hotel.model.*;
 import com.nbc.hotel.util.Util;
 import com.nbc.hotel.exception.ReservationNotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import static com.nbc.hotel.model.ViewManagement.showSelectedDateRooms;
 import static com.nbc.hotel.util.Util.isValidDate;
 
 public class HotelReservationApp {
     private Hotel hotel = new Hotel();
-    private int roomNumber = 1;
-
+    private Customer customer = new Customer();
 
     public boolean start() {
         return false;
@@ -29,45 +29,7 @@ public class HotelReservationApp {
                 int select = InputManager.inputMenuNumber(3);
                 switch(select) {
                     case 0:
-                        // 입력단 예외 상황 해결을 위해 makeReservation()으로 옮김
-                        System.out.println("날짜를 입력해주세요 : ");
-                        String selectDate = InputManager.handleInput();
-                        makeReservation(selectDate);
-
-                        // 날짜 입력 로직
-
-                        System.out.println("============================");
-                        System.out.println("선택하고 싶은 방을 골라주세요 : ");
-                        int selectRoomNumber = InputManager.inputMenuNumber(hotel.getRooms().size());
-                        checkRoom(selectRoomNumber, selectDate);
-                        // room 확인 및 예약 진행 로직
-
-                        System.out.println("=====1. 예약하기 2. 취소하기=====");
-                        int finalCheck = InputManager.inputMenuNumber(2);
-                        reservationOrCancel(finalCheck);
-                        // 해당 사항으로 최종확인 여부를 물음
-
-                        System.out.println("예약자 성함을 알려주세요 : ");
-                        String customerName = InputManager.handleInput();
-                        hotel.checkCustomerName(customerName, selectRoomNumber);
-                        // 예약자 이름 확인 로직
-
-                        System.out.println("예약자 전화번호를 입력해주세요 : (010-****-****만 가능)");
-                        String customerPhoneNumber = InputManager.handleInput();
-                        boolean checkBlackList = hotel.checkBlackListPhoneNumber(customerPhoneNumber);
-
-                        if(checkBlackList) {
-                            // 예약자가 블랙리스트인 사용자
-                            break;
-                        }else {
-                            // 예약자가 블랙리스트 아닌 사용자
-                            System.out.println(customerName+"님의 소지 금액을 입력해주세요 : ");
-                            double customerMoney = InputManager.inputMoney();
-                            double selectRoomPrice = hotel.getRooms().get(selectRoomNumber).getPrice();
-                            hotel.checkMoney(customerMoney, selectRoomPrice, selectDate);
-                            // 돈 확인
-                        }
-                        // 블랙리스트 조회 및 돈 확인
+                        reservationProcess();
                         break;
                     case 1:
                         // 예약 취소
@@ -84,6 +46,59 @@ public class HotelReservationApp {
             }catch(Exception e) {}
         }
     }
+
+    private void reservationProcess() throws Exception {
+        // 입력단 예외 상황 해결을 위해 makeReservation()으로 옮김
+        System.out.println("날짜를 입력해주세요 : ");
+        String selectDate = InputManager.handleInput();
+        makeReservation(selectDate);
+
+        // 날짜 입력 로직
+
+        System.out.println("============================");
+        System.out.println("선택하고 싶은 방을 골라주세요 : ");
+        int selectRoomNumber = InputManager.inputMenuNumber(hotel.getRooms().size());
+        // room 확인 및 예약 진행 로직
+
+
+        // 이미 예약된 방인지 검증
+        if (hotel.getRooms().get(selectRoomNumber).isReserved(LocalDate.parse(selectDate)))
+            // doSomething
+
+
+        System.out.println("=====1. 예약하기 2. 취소하기=====");
+        int finalCheck = InputManager.inputMenuNumber(2);
+        ViewManagement.showReservationOrCancel(finalCheck);
+        // 해당 사항으로 최종확인 여부를 물음
+
+        Reservation reservation = new Reservation();
+
+        System.out.println("예약자 성함을 알려주세요 : ");
+        String customerName = InputManager.handleInput();
+        hotel.checkCustomerName(customerName, selectRoomNumber);
+        // 예약자 이름 확인 로직
+
+        System.out.println("예약자 전화번호를 입력해주세요 : (010-****-****만 가능)");
+        String customerPhoneNumber = InputManager.handleInput();
+        boolean checkBlackList = hotel.checkBlackListPhoneNumber(customerPhoneNumber);
+
+        if(checkBlackList) {
+            // 예약자가 블랙리스트인 사용자
+            return;
+        }else {
+            // 예약자가 블랙리스트 아닌 사용자
+            System.out.println(customerName+"님의 소지 금액을 입력해주세요 : ");
+            double customerMoney = InputManager.inputMoney();
+            double selectRoomPrice = hotel.getRooms().get(selectRoomNumber).getPrice();
+            if (hotel.checkMoney(customerMoney, selectRoomPrice, selectDate)) {
+                // 돈 있으면
+                hotel.getRooms().get(selectRoomNumber).addReservation();
+            }
+
+        }
+        // 블랙리스트 조회 및 돈 확인
+    }
+
     public void makeReservation(String selectDate) throws Exception {
         try {
             // selectDate의 유효성을 검사합니다.
@@ -96,54 +111,7 @@ public class HotelReservationApp {
             System.out.println("=========다시 실행합니다=========");
             throw new Exception();
         }
-        System.out.println("============================");
-        System.out.println("해당 날짜 : "+ selectDate+" 방 예약");
-        System.out.println("============================");
-        roomNumber = 1;
-
-        hotel.getRooms().stream().forEach((room)-> {
-            int roomSize = room.getSize().intValue();
-            System.out.println(roomNumber + ". " + "size: " + roomSize + " price: $" + room.getPrice());
-            roomNumber++;
-        });
-    }
-
-
-
-    public void checkRoom(int selectRoomNumber, String selectDate) throws Exception {
-        try {
-            if (selectRoomNumber < 0 || selectRoomNumber >= hotel.getRooms().size()) {
-                throw new RoomNumberInvalidException("잘못된 방 번호입니다.");
-            }
-
-            Integer selectRoomSize = hotel.getRooms().get(selectRoomNumber).getSize().intValue();
-            Double selectRoomPrice = hotel.getRooms().get(selectRoomNumber).getPrice();
-            System.out.println("=========" + selectDate + "=========");
-            System.out.println("size : " + selectRoomSize + " price : $" + selectRoomPrice);
-        } catch (RoomNumberInvalidException e) {
-            System.out.println("예외 발생: " + e.getMessage());
-            System.out.println("예약 페이지로 다시 돌아갑니다.");
-            System.out.println("============================");
-            throw new Exception();
-        }
-    }
-
-
-
-    public void reservationOrCancel(int finalCheck) throws Exception {
-        switch(finalCheck) {
-            case 0:
-                return;
-            case 1:
-                System.out.println("예약을 취소하셨습니다.");
-                System.out.println("예약 페이지로 다시 돌아갑니다.");
-                System.out.println("============================");
-                throw new Exception();
-            default :
-                System.out.println("잘못된 입력을 하여 예약 페이지로 다시 돌아갑니다.");
-                System.out.println("============================");
-                throw new Exception();
-        }
+        showSelectedDateRooms(selectDate, hotel.getRooms());
     }
 
     /**

@@ -16,11 +16,39 @@ import com.nbc.hotel.exception.RoomNumberInvalidException;
 
 public class ViewManagement {
 
-    private int roomNumber = 1;
-    
     public ViewManagement() {
-    	
+
     }
+
+    public static void showReservationOrCancel(int finalCheck) throws Exception {
+        switch (finalCheck) {
+            case 0:
+                return;
+            case 1:
+                System.out.println("예약을 취소하셨습니다.");
+                System.out.println("예약 페이지로 다시 돌아갑니다.");
+                System.out.println("============================");
+                throw new Exception();
+            default:
+                System.out.println("잘못된 입력을 하여 예약 페이지로 다시 돌아갑니다.");
+                System.out.println("============================");
+                throw new Exception();
+        }
+    }
+
+    public static void showSelectedDateRooms(String selectDate, List<Room> rooms) {
+        System.out.println("============================");
+        System.out.println("해당 날짜 : " + selectDate + " 방 예약");
+        System.out.println("============================");
+        int roomNumber = 1;
+
+        for (Room room : rooms) {
+            int roomSize = room.getSize().intValue();
+            System.out.println(roomNumber + ". " + "size: " + roomSize + " price: $" + room.getPrice());
+            roomNumber++;
+        }
+    }
+
 
     public static void showFindReservationMenu() {
         System.out.println();
@@ -57,6 +85,7 @@ public class ViewManagement {
     public static void showFindReservationClose() {
         System.out.println("예약 조회를 종료합니다.");
     }
+
     public static void showFindReservationFailed() {
         System.out.println("예약 번호로 조회할 수 없습니다.");
     }
@@ -78,7 +107,6 @@ public class ViewManagement {
         System.out.println("객실 예약 취소가 실패하였습니다.");
         System.out.printf("사유 %s %n", reason);
     }
-    
 
 
 }	
