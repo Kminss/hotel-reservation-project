@@ -2,17 +2,6 @@ package com.nbc.hotel.model;
 
 
 import java.util.List;
-import java.util.Scanner;
-
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
-
-import com.nbc.hotel.exception.RoomNumberInvalidException;
 
 public class ViewManagement {
 
@@ -35,6 +24,22 @@ public class ViewManagement {
                 throw new Exception();
         }
     }
+
+    public static void showReservationInfo(Reservation reservation) {
+        StringBuilder receipt = new StringBuilder();
+
+        receipt.append("=============receipt=============");
+        receipt.append("\n이름 : ").append(reservation.getCustomerName());
+        receipt.append("\n전화번호 : ").append(reservation.getCustomerPhoneNumber());
+        receipt.append("\n예약 신청일 : ").append(reservation.getReservationDate());
+        receipt.append("\n예약 당일 : ").append(reservation.getReservationDay());
+        receipt.append("\n예약 ID : ").append(reservation.getUUID());
+        receipt.append("\n가격 : ").append(reservation.getRoom().getPrice());
+        receipt.append("\n방 사이즈 : ").append(reservation.getRoom().getSize());
+        receipt.append("\n================================");
+        System.out.println(receipt);
+    }
+
 
     public static void showSelectedDateRooms(String selectDate, List<Room> rooms) {
         System.out.println("============================");

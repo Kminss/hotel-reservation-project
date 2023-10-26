@@ -1,33 +1,34 @@
 package com.nbc.hotel.app;
 
+import com.nbc.hotel.exception.ReservationNotFoundException;
 import com.nbc.hotel.model.*;
 import com.nbc.hotel.util.Util;
-import com.nbc.hotel.exception.ReservationNotFoundException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import static com.nbc.hotel.model.ViewManagement.showReservationInfo;
 import static com.nbc.hotel.model.ViewManagement.showSelectedDateRooms;
 import static com.nbc.hotel.util.Util.isValidDate;
 
 public class HotelReservationApp {
-    private Hotel hotel = new Hotel();
-    private Customer customer = new Customer();
+    private Hotel hotel;
+    private Customer customer;
 
-    public boolean start() {
-        return false;
+    public HotelReservationApp(Customer customer) {
+        hotel = new Hotel();
+        this.customer = customer;
     }
 
-
-    // role : admin, user처리는 팀원과 상의 후 처리 예정
     public void mainProcess() {
         while (true) {
             try {
                 System.out.println("호텔 기능을 선택해주세요. ");
                 System.out.println("1. 예약 2. 취소 3. 조회");
                 int select = InputManager.inputMenuNumber(3);
-                switch(select) {
+                switch (select) {
                     case 0:
                         reservationProcess();
                         break;
@@ -39,11 +40,13 @@ public class HotelReservationApp {
                         // 예약 조회
                         findReservationProcess();
                         break;
-                    default :
+                    default:
                         System.out.println("잘못된 입력입니다. 다시 시도해주세요");
                         break;
                 }
-            }catch(Exception e) {}
+            } catch (Exception e) {
+                System.out.println("오류가 발생했습니다. " + e.getMessage());
+            }
         }
     }
 
@@ -60,43 +63,54 @@ public class HotelReservationApp {
         int selectRoomNumber = InputManager.inputMenuNumber(hotel.getRooms().size());
         // room 확인 및 예약 진행 로직
 
-
         // 이미 예약된 방인지 검증
-        if (hotel.getRooms().get(selectRoomNumber).isReserved(LocalDate.parse(selectDate)))
-            // doSomething
-
+        if (isReserved(selectDate, selectRoomNumber))
+            throw new Exception("이미 예약된 방입니다.");
 
         System.out.println("=====1. 예약하기 2. 취소하기=====");
         int finalCheck = InputManager.inputMenuNumber(2);
         ViewManagement.showReservationOrCancel(finalCheck);
         // 해당 사항으로 최종확인 여부를 물음
 
-        Reservation reservation = new Reservation();
-
         System.out.println("예약자 성함을 알려주세요 : ");
         String customerName = InputManager.handleInput();
         hotel.checkCustomerName(customerName, selectRoomNumber);
+
         // 예약자 이름 확인 로직
 
-        System.out.println("예약자 전화번호를 입력해주세요 : (010-****-****만 가능)");
+        System.out.println("예약자 전화번호를 입력해주세요 : (01*-****-****만 가능)");
         String customerPhoneNumber = InputManager.handleInput();
-        boolean checkBlackList = hotel.checkBlackListPhoneNumber(customerPhoneNumber);
+        boolean isValidPhoneNumber = hotel.checkPhoneNumber(customerPhoneNumber);
 
-        if(checkBlackList) {
-            // 예약자가 블랙리스트인 사용자
-            return;
-        }else {
-            // 예약자가 블랙리스트 아닌 사용자
-            System.out.println(customerName+"님의 소지 금액을 입력해주세요 : ");
-            double customerMoney = InputManager.inputMoney();
+        if (!isValidPhoneNumber) {
+            throw new Exception("올바르지 않은 전화번호입니다.");
+        } else {
             double selectRoomPrice = hotel.getRooms().get(selectRoomNumber).getPrice();
-            if (hotel.checkMoney(customerMoney, selectRoomPrice, selectDate)) {
-                // 돈 있으면
-                hotel.getRooms().get(selectRoomNumber).addReservation();
+            if (hotel.checkMoney(customer, selectRoomPrice, selectDate)) {
+                finalReservation(selectDate, selectRoomNumber,
+                        customerName, customerPhoneNumber);
             }
 
         }
         // 블랙리스트 조회 및 돈 확인
+    }
+
+    public void finalReservation(String selectDate, int selectRoomNumber, String customerName,
+                                 String customerPhoneNumber) {
+        Reservation reservation = new Reservation(UUID.randomUUID(),
+                hotel.getRooms().get(selectRoomNumber), customerName,
+                customerPhoneNumber, LocalDate.parse(selectDate), LocalDateTime.now());
+        hotel.getRooms().get(selectRoomNumber).addReservation(reservation);
+        System.out.println(customerName + "님 예약 완료되셨습니다.");
+        System.out.println(customerName + "님 예약 번호는" + reservation.getUUID() + "입니다.");
+
+        hotel.getReservations().add(reservation);
+        showReservationInfo(reservation);
+    }
+
+
+    private boolean isReserved(String selectDate, int selectRoomNumber) {
+        return hotel.getRooms().get(selectRoomNumber).isReserved(LocalDate.parse(selectDate));
     }
 
     public void makeReservation(String selectDate) throws Exception {
@@ -122,22 +136,10 @@ public class HotelReservationApp {
         Integer menuNumber = InputManager.inputMenuNumber(4);
 
         switch (FindMenu.toMenu(menuNumber)) {
-            case FIND_ALL -> {
-                findAllReservationsProcess();
-                mainProcess();
-            }
-            case FIND_OWN -> {
-                findOwnReservationsProcess();
-                mainProcess();
-            }
-            case FIND_UUID -> {
-                findOneReservationProcess();
-                mainProcess();
-            }
-            case QUIT -> {
-                findReservationQuitProcess();
-                mainProcess();
-            }
+            case FIND_ALL -> findAllReservationsProcess();
+            case FIND_OWN -> findOwnReservationsProcess();
+            case FIND_UUID -> findOneReservationProcess();
+            case QUIT -> findReservationQuitProcess();
         }
     }
 
@@ -147,7 +149,6 @@ public class HotelReservationApp {
     }
 
     public void findOwnReservationsProcess() {
-        Customer customer = hotel.getCustomer();
         List<Reservation> reservations = hotel.findReservationsByUUIDs(customer.getReservationIds());
         ViewManagement.showFindMyReservations(reservations);
     }
@@ -171,9 +172,6 @@ public class HotelReservationApp {
     public void cancelReservationProcess() {
         ViewManagement.showCancelReservation();
         String reservationId = InputManager.handleInput();
-        if (reservationId.equals("0")) {
-            mainProcess();
-        }
 
         try {
             Reservation reservation = hotel.findReservationByUUID(Util.converStringToUuid(reservationId));
