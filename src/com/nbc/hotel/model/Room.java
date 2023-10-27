@@ -28,10 +28,6 @@ public class Room {
         reservations.add(reservation);
     }
 
-    public void removeReservation(Reservation reservation) {
-        reservations.remove(reservation);
-    }
-
     public boolean isReserved(LocalDate localDate) {
         return reservations
                 .stream()

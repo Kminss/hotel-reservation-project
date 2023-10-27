@@ -74,7 +74,7 @@ public class HotelReservationApp {
 
         System.out.println("예약자 성함을 알려주세요 : ");
         String customerName = InputManager.handleInput();
-        hotel.checkCustomerName(customerName, selectRoomNumber);
+        hotel.checkCustomerName(customerName);
 
         // 예약자 이름 확인 로직
 
@@ -86,7 +86,7 @@ public class HotelReservationApp {
             throw new Exception("올바르지 않은 전화번호입니다.");
         } else {
             double selectRoomPrice = hotel.getRooms().get(selectRoomNumber).getPrice();
-            if (hotel.checkMoney(customer, selectRoomPrice, selectDate)) {
+            if (hotel.checkMoney(customer, selectRoomPrice)) {
                 finalReservation(selectDate, selectRoomNumber,
                         customerName, customerPhoneNumber);
             }

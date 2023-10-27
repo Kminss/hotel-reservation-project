@@ -74,7 +74,7 @@ public class Hotel {
     }
 
     // 예약 처리 프로세스
-    public void checkCustomerName(String customerName, int selectRoomNumber) throws Exception {
+    public void checkCustomerName(String customerName) throws Exception {
         try {
             if (!customerName.matches("^[a-zA-Z가-힣\\s]*$")) {
                 throw new IllegalArgumentException("예약자 이름은 특수 문자를 포함해서는 안 됩니다.");
@@ -104,7 +104,7 @@ public class Hotel {
         return true;
     }
 
-    public boolean checkMoney(Customer customer, double selectRoomPrice, String selectDate) {
+    public boolean checkMoney(Customer customer, double selectRoomPrice) {
         return hasMoney(customer, selectRoomPrice);
     }
 

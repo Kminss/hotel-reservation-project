@@ -18,6 +18,9 @@ public class Util {
         }
     }
 
+    private Util() {
+    }
+
     public static boolean isValidDate(String selectDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         // 날짜 검사 결과를 저장할 변수입니다.
@@ -30,10 +33,7 @@ public class Util {
             // 현재 날짜와 비교
             LocalDate currentDate = LocalDate.now();
             // 입력된 날짜가 현재 날짜 이전이면 유효하지 않음
-            if (selectedDate.isBefore(currentDate)) {
-                return false;
-            }
-            return true;
+            return !selectedDate.isBefore(currentDate);
         } catch (ParseException e) {
             return false;
         }

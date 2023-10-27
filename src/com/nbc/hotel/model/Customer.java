@@ -6,7 +6,6 @@ import java.util.UUID;
 
 public class Customer {
 
-    private Role role;
     private String name;
     private String phoneNumber;
     private Double money;
@@ -18,27 +17,6 @@ public class Customer {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.money = money;
-    }
-
-    public Customer(String name, String phoneNumber, Double money, List<UUID> reservationIds) {
-        this(name, phoneNumber, money);
-        this.reservationIds = reservationIds;
-    }
-
-    public Customer(Role role, String name, String phoneNumber, Double money, List<UUID> reservationIds) {
-        this.role = role;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.money = money;
-        this.reservationIds = reservationIds;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public String getName() {

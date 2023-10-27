@@ -15,10 +15,6 @@ public class Reservation {
     // 예약 당일
     private LocalDateTime reservationDay;
 
-    public Reservation() {
-
-    }
-
     public Reservation(UUID uuid, Room room, String customerName, String customerPhoneNumber, LocalDate reservationDate, LocalDateTime reservationDay) {
         this.uuid = uuid;
         this.room = room;
@@ -32,49 +28,24 @@ public class Reservation {
         return this.uuid;
     }
 
-    public void setUUID(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-
     public Room getRoom() {
         return this.room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
     }
 
     public String getCustomerName() {
         return this.customerName;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
     public String getCustomerPhoneNumber() {
         return this.customerPhoneNumber;
-    }
-
-    public void setCustomerPhoneNumber(String customerPhoneNumber) {
-        this.customerPhoneNumber = customerPhoneNumber;
     }
 
     public LocalDate getReservationDate() {
         return this.reservationDate;
     }
 
-    public void setReservationDate(LocalDate reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
     public LocalDateTime getReservationDay() {
         return this.reservationDay;
-    }
-
-    public void setReservationDay(LocalDateTime reservationDay) {
-        this.reservationDay = reservationDay;
     }
 
     public String getReservationInfo() {
@@ -91,13 +62,4 @@ public class Reservation {
     public UUID getReservationId() {
         return uuid;
     }
-
-    public LocalDate reservationDate(String selectDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate ld = LocalDate.parse(selectDate, formatter);
-
-        return ld;
-    }
-
-
 }
