@@ -5,10 +5,6 @@ import java.util.List;
 
 public class ViewManagement {
 
-    public ViewManagement() {
-
-    }
-
     public static void showReservationOrCancel(int finalCheck) throws Exception {
         switch (finalCheck) {
             case 0:
@@ -54,7 +50,6 @@ public class ViewManagement {
         }
     }
 
-
     public static void showFindReservationMenu() {
         System.out.println();
         System.out.println("객실 예약 조회 화면입니다.");
@@ -91,11 +86,6 @@ public class ViewManagement {
         System.out.println("예약 조회를 종료합니다.");
     }
 
-    public static void showFindReservationFailed() {
-        System.out.println("예약 번호로 조회할 수 없습니다.");
-    }
-
-
     public static void showCancelReservation() {
         System.out.println("객실 예약 취소");
         System.out.println("취소하실 객실의 예약 번호를 입력해주세요.");
@@ -112,6 +102,4 @@ public class ViewManagement {
         System.out.println("객실 예약 취소가 실패하였습니다.");
         System.out.printf("사유 %s %n", reason);
     }
-
-
-}	
+}

@@ -46,25 +46,4 @@ public class InputManager {
     public static String handleInput() {
         return sc.nextLine();
     }
-
-    public static Long inputMoney() {
-        long result = -1;
-        while (result == -1) {
-            try {
-                result = Long.parseLong(sc.nextLine());
-                if (!isValidMoney(result))
-                    result = -1;
-            } catch (Exception exception) {
-                System.out.println("잘못된 입력입니다.");
-            }
-        }
-        return result;
-    }
-
-    private static boolean isValidMoney(long money) {
-        if (money > 0) {
-            return true;
-        }
-        return false;
-    }
 }
