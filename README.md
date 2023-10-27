@@ -11,5 +11,7 @@
 
 <img src="https://github.com/Kminss/hotel-reservation-project/assets/73427028/da28fd81-ced9-4512-b3ad-35675fb49de6" width="500" height="500"/>
 
+### 클래스다이어그램
 
+<img src="https://github.com/Kminss/hotel-reservation-project/assets/73427028/139d7dac-ce99-4d91-9427-a830b10280ce" width="600" height="600"/>
 
